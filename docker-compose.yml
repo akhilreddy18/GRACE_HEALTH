@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  mysqldb:
+    image: mysql:5.6
+    restart: unless-stopped
+    environment:
+      - MYSQL_ROOT_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+    ports:
+      - 3307:3306
+
+  app:
+    depends_on:
+      - mysqldb
+    build: ./football
+    restart: unless-stopped
+    environment:
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_HOST=${MYSQL_HOST}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PORT=${MYSQL_PORT}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - NODE_ENV=${NODE_ENV}
+      - NODE_PORT=${NODE_PORT}
+    ports:
+      - 3001:3000
+    stdin_open: true
+    tty: true
